@@ -31,7 +31,7 @@
             const panel = document.querySelector('.PLUGIN_PREFIX-panel');
 
             // Check if the click occurred outside the control area AND the panel is visible
-            if (control && panel && !control.contains(e.target) && panel.style.display !== 'none') {
+             if ( ((control  && !control.contains(e.target)) || !control) && panel && panel.style.display !== 'none') {
                 ktwp_closePanelScript(e);
             }
         });
