@@ -140,17 +140,13 @@ $args = shortcode_atts(
     );
  /* end of shortcode parameter block */   
 ?>
- <div ID="PLUGIN_PREFIX-panel" class="PLUGIN_PREFIX-panel">
-            <div class="PLUGIN_PREFIX-panel-header">
-               <!--  <span>PANEL TITLE GOES HERE</span>  -->
-                <button class="PLUGIN_PREFIX-close-button">&times;</button>
-            </div>
+
             <div class="PLUGIN_PREFIX-panel-content">
               <!-- PANEL CONTENT HERE -->
 		
             </div>
 			<!-- <button id="PLUGIN_PREFIX-reset-button" style="width: 100%; padding: 8px; background: #808080; color: white; border: none; border-radius: 3px; cursor: pointer; margin-top: 10px;">RESET BUTTON TEXT, IF YOU WANT ONE</button> -->
-        </div>
+    
        <?php
 }
 
@@ -159,27 +155,47 @@ $args = shortcode_atts(
 function PLUGIN_PREFIX_add_control_panel_popup() {
 /*note: ktwp-kupietabs-tab-div class will identify all tabs created this way so other instances of this framework—or any other plugin, like KupieTools Draggable Elements for instance—can find them. */
     ?>
-    <div id="PLUGIN_PREFIX-control" class="PLUGIN_PREFIX-control ktwp-kupietabs-tab-div">
+    <div id="PLUGIN_PREFIX-control" class="PLUGIN_PREFIX-control">
        <button class="PLUGIN_PREFIX-icon"><!-- TO-DO NOTE: maybe add a title attribute here later, and make KupieTools Draggable Elements add its "drag me" text, rather than just replacing it, if it doesn't do that already. Or, um, does it do that on the parent #PLUGIN_PREFIX-control div? Check this. -->
     <!-- ICON GOES HERE, INCLUDING EITHER AN HREF, A JAVASCRIPT CALL TO  -->
     <span class="PLUGIN_PREFIX-hover-text"><!-- POPOUT-ON-HOVER DESCRIPTIVE TEXT GOES HERE --></span>
 </button>
-<?php PLUGIN_PREFIX_plugin_content() ?>
-       
+ 
     </div>
-<script>
-/* stop event listeners from bubbling */	['mousedown','dragstart','touchstart','touchmove','click'].forEach(thisAction => {
-document.getElementById("PLUGIN_PREFIX-panel").addEventListener(thisAction, function(event) { event.stopPropagation();});});
+    <div ID="PLUGIN_PREFIX-panel" class="PLUGIN_PREFIX-panel ktwp-kupietabs-panel-div">
+            <div class="PLUGIN_PREFIX-panel-header">
+               <!--  <span>PANEL TITLE GOES HERE</span>  -->
+                <button class="PLUGIN_PREFIX-close-button">&times;</button>
+            </div>
+<?php PLUGIN_PREFIX_plugin_content() ?>
+       </div>
+<script id="PLUGIN_PREFIX_inline_script">
+/* stop event listeners from bubbling */	/* stop event listeners from bubbling */	['mousedown','mouseover','mousemove','dragstart','touchstart','touchmove','click'].forEach(thisAction => {
+const thisPan=document.getElementById("ktwp_eyesHaveIt-panel");
+if(thisPan) {thisPan.addEventListener(thisAction, function(event) { event.stopPropagation();});}
+
+
+
+});
 
 /* I originally created a parent container so I could have a flexbox to append the divs to as children so multiple plugins' tabs stacked automatically; but I decided that's not needed, I'll just count the kupietab elements and multiply to calculate the right top, so it's set explicitly. 
 */
 
 /* move the new tab to stack under tabs from other KupieTools plugins, if desired (which it probably is.) Remove this section if you don't want that. */ 
-const numOfKupieTabs=document.getElementsByClassName("ktwp-kupietabs-tab-div").length-1; /* start at 0 so no offset from 130px */
-thisTab=document.getElementById("PLUGIN_PREFIX-control");
-thisTab.style.top = (130+ numOfKupieTabs * 38) + "px";
-/* end move the new tab to stack under tabs from other KupieTools plugins */
 
+
+
+const PLUGIN_PREFIX_numOfKupieTabs=document.getElementsByClassName("ktwp-kupietabs-tab-div").length; /* start at 0 so no offset from 130px */
+const PLUGIN_PREFIX_thisTab=document.getElementById("PLUGIN_PREFIX-control");
+
+if(PLUGIN_PREFIX_thisTab) {
+PLUGIN_PREFIX_thisTab.classList.add("ktwp-kupietabs-tab-div"); /* have to do it this way because sometimes page optimizers defer scripts... this might not run at all until after all tabs have been added to the page */
+PLUGIN_PREFIX_thisTab.style.top = (130+ PLUGIN_PREFIX_numOfKupieTabs * 38) + "px";
+/* end move the new tab to stack under tabs from other KupieTools plugins */}
+const PLUGIN_PREFIX_thisPanel=document.getElementById("PLUGIN_PREFIX-panel");
+if(PLUGIN_PREFIX_thisPanel) {
+PLUGIN_PREFIX_thisPanel.style.top = (140 + PLUGIN_PREFIX_numOfKupieTabs * 38) + "px";
+	PLUGIN_PREFIX_thisPanel.style.left="20px";}
 </script>
     <?php
 }
